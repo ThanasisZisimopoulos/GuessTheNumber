@@ -1,24 +1,12 @@
 from flask import *
 import json
-from markupsafe import escape
+import random
 from hashlib import md5
 
-app = Flask(__name__)
 
-@app.route("/")
-def hello_world():
-    return "<p>Hello, World2!</p>"
+# import os #debugging purposes
 
-
-
-
-
-
-
-
-@app.route("/<name>")
-def hello(name):
-    return f"Hello, {escape(name)}!"
+app = Flask(__name__, template_folder='html')
 
 
 class Player():                             #κλάση παίκτη για τη δημιουργία και τη διαχείρηση των παικτών
@@ -30,7 +18,7 @@ class Player():                             #κλάση παίκτη για τη
 
 
     def create_new_profile(self):           #μέθοδος της κλάσης Player οπου αποθηκεύει τα νεουδρυθέντα προφίλ στο αρχείο
-        f = open("data.json",'r+')          #το αρχείο με τα σκόρ είναι τύπου json 
+        f = open("app/data.json",'r+')          #το αρχείο με τα σκόρ είναι τύπου json 
         database = json.load(f)
 
         hashed_password = md5(self.password.encode()).hexdigest() #ο κωδικός αποθηκεύεται σε κατακερματισμένη (hashed) μορφή md5
@@ -43,10 +31,11 @@ class Player():                             #κλάση παίκτη για τη
         
     def login(self):
         '''Μέθοδος της κλάσης Player που διαχειρίζεται την επαλήθευση του κωδικού και το login'''
-        f = open("data.json",'r+')
+        f = open("app/data.json",'r+')
         database = json.load(f)
+        print("has for ",self.password)
         hashed_password = md5(self.password.encode()).hexdigest() #υπολογίζεται το hash του κωδικού που υπέβαλε ο χρήστης
-        
+        print("is: ",hashed_password)
 
         
 
@@ -63,7 +52,7 @@ class Player():                             #κλάση παίκτη για τη
         
 
     def lookup_player(self):      #Μέθοδος της κλάσης Player που αναζητά αν υπάρχει το προφιλ στο αρχείο
-        f = open("data.json",'r+')
+        f = open("app/data.json",'r+')
         database = json.load(f)
         profile_found = False
         for profile in database:
@@ -78,7 +67,38 @@ class Player():                             #κλάση παίκτη για τη
         f.close()
         return profile_found
 
+class Game():
+    def __init__(self, player, highscore, difficulty):
+        self.player = player
+        self.current_highscore = highscore
+        self.difficulty = difficulty
 
+    
+    def generate_number(self):            #TODO: tune the difficulty parameters 
+        if self.difficulty == 1:
+            number = random.randint(1,10)
+            return number
+        elif self.difficulty == 2:
+            number = random.randint(1,50)
+            return number
+        elif self.difficulty == 3:
+            number = random.randint(1,100)
+            return number
+        else :
+            return -1   #error
+            
+    def test_number(self, player_number, game_number):
+        if player_number == game_number:
+            return 0
+        elif player_number < game_number:
+            return -1
+        elif player_number > game_number:
+            return 1
+        else:
+            return 9999 #error
+            
+
+        
         
 
     
@@ -98,7 +118,46 @@ def gameloop():
 
 
 if __name__ == "__main__":
-    gameloop()
+    
+
+
+
+    @app.route("/")
+    def initialize():
+        app.static_folder = 'static'
+    
+        return render_template("index.html")
+    
+    @app.route("/login", methods=['POST'])
+    def login():
+        user =Player(request.form['Username'], request.form['Password'])
+        result = user.login()
+        print(result)
+        show_highscore = False
+        show_greeting = False
+
+        while type(result) == int:
+            if result == 1:
+                print("wrong password")
+            elif result == 2:
+                user.create_new_profile()
+                result = user
+                print("user didmt exist, created account")
+                
+        if type(result) != int:
+            show_highscore = True
+            show_greeting = True
+            
+
+
+        print(show_highscore, show_greeting)
+        return render_template("index.html", show_highscore=show_highscore, show_greeting=show_greeting)
+        
+'''TODO
+        fix the classes system for the visibility of the highscore and the greeting
+        now the highscore is wokring but the greeting is not
+''' 
+        
 
 
 

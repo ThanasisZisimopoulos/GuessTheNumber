@@ -1,0 +1,37 @@
+<!doctype html>
+            <html lang="en">
+              <head>
+                <meta charset="utf-8">
+                <title>Home</title>
+                <meta name="generator" content="GrapesJS Studio">
+                <meta name="viewport" content="width=device-width,initial-scale=1">
+                <meta property="og:type" content="website">
+                <meta name="robots" content="index,follow">
+                <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+              </head>
+              <body id="iau9">
+                <div class="{{ 'visible' if show_greeting else 'hidden' }}" id="greeting"> Hello, &lt;flaskfolder&gt; !</div>
+                <h1 id="imk5" class="gjs-heading">Guess The Number</h1>
+                <div id="i7efi">
+                  <b class="{{ 'visible' if show_highscore else 'hidden' }}" id="high_score_label"  >High-Score: &lt;number&gt; </b>
+                </div>
+                <form method="post" id="form" action="{{ url_for('login') }}">
+                  <div id="i44ok">
+                    <label id="ipbmg">Username</label>
+                    <input type="text" name="Username" id="Username"/>
+                  </div>
+                    <div id="i85wj">
+                      <label id="Password_label">Password</label>
+                      <input type="text" name="Password" id="Password_textbox"/>
+                    </div>
+                    <button type="submit" id="login_button">Login</button>
+                </form>
+                  <div id="izisr">
+                    <button type="button" id="iolf">Start Game</button>
+                    <button type="button" id="idf1g">Medium</button>
+                    <button type="button" id="ikr5">Hard</button>
+                    <button type="button" id="i2wo3">Easy</button>
+                  </div>
+                </body>
+            </html>
+          
