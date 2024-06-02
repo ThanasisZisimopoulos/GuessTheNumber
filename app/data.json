@@ -13,7 +13,7 @@
     ],
     "Test": [
         "0cbc6611f5540bd0809a388dc95a615b",
-        0
+        99
     ],
     "": [
         "d41d8cd98f00b204e9800998ecf8427e",
@@ -22,5 +22,29 @@
     "admin": [
         "098f6bcd4621d373cade4e832627b4f6",
         0
+    ],
+    "gamietai o dias": [
+        "94d1d9ce2064614ec755dae80a822360",
+        0
+    ],
+    "test2": [
+        "098f6bcd4621d373cade4e832627b4f6",
+        0
+    ],
+    "something": [
+        "22af645d1859cb5ca6da0c484f1f37ea",
+        0
+    ],
+    "asfdfa": [
+        "d41d8cd98f00b204e9800998ecf8427e",
+        0
+    ],
+    "babis": [
+        "49ae03ad1d3e8a93eb6433a8c9f2dda3",
+        0
+    ],
+    "test22": [
+        "6eea9b7ef19179a06954edd0f6c05ceb",
+        10
     ]
 }
