@@ -14,7 +14,7 @@
                 <b class="gjs-heading" id="if6rg">{{best_highscore}}</b>
                 <b id="ikvg4">Please select difficulty</b>
 
-                <form action="{{ url_for('button_pressed') }}" method="post">
+                <form action="{{ url_for('main_menu') }}" method="post">
                   <button type="submit" name="action" value="hard" id="ikr5" class="{{ 'pressed' if (pressed=='hard') else '' }}">Hard</button>
                   <button type="submit" name="action" value="medium" id="idf1g" class="{{ 'pressed' if (pressed=='medium') else '' }}">Medium</button>
                   <button type="submit" name="action" value="easy" id="i2wo3" class="{{ 'pressed' if (pressed=='easy') else '' }}">Easy</button>

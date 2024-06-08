@@ -1,0 +1,15 @@
+72 session['best_score'] = highscore
+196 session['username'] = result.username
+197 session['userscore'] = result.score
+213 session['difficulty'] = pressed
+216 session['game_started'] = 'yes'
+231 session.clear()
+240 session['difficulty'] = action
+267 session['round_number'] = 10
+271 session['min'] = 1 
+278 session['max'] = 100     
+283 session['round_number']= generate_number(session['difficulty'])
+288 session['function_run_count'] = 0
+294 session['function_run_count'] -= 1
+301 session['min'] = number
+303 session['win'] = False
