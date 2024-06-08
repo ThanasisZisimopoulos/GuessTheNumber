@@ -68,7 +68,7 @@ class Player():                             #κλάση παίκτη για τη
 
 
 
-        print(highscore)
+        
         session['best_score'] = highscore
         
         
@@ -101,39 +101,38 @@ class Player():                             #κλάση παίκτη για τη
 
 
 
-class Game():
-    def __init__(self, player, highscore):
-        self.player = player
-        self.current_highscore = highscore
-        self.difficulty = 0
+#class Game():
+# def __init__(self, player, highscore):
+#     self.player = player
+#     self.current_highscore = highscore
+#     self.difficulty = 0
 
-    
-    def generate_number(self):            #TODO: tune the difficulty parameters 
-        "μέθοδος της κλάσης game που επιστρέφει τυχαίο αριθμό ανάλογα με τη δυσκολία"
-        if self.difficulty == 'easy':
-            number = random.randint(1,10)
-            return number
-        elif self.difficulty == 'medium':
-            number = random.randint(1,50)
-            return number
-        elif self.difficulty == 'hard':
-            number = random.randint(1,100)
-            return number
-        else :
-            return -1   #error
-            
-    def test_number(self, player_number, game_number):
-        '''μέθοδος της κλάσης game που ελέγχει αν ο παίκτης βρήκε τον αριθμό'''
-        if player_number == game_number:
-            return 0
-        elif player_number < game_number:
-            return -1
-        elif player_number > game_number:
-            return 1
-        else:
-            return 9999 #error
+def generate_number(difficulty):            #TODO: tune the difficulty parameters 
+    "μέθοδος της κλάσης game που επιστρέφει τυχαίο αριθμό ανάλογα με τη δυσκολία"
+    if difficulty == 'easy':
+        number = random.randint(1,10)
+        return number
+    elif difficulty == 'medium':
+        number = random.randint(1,50)
+        return number
+    elif difficulty == 'hard':
+        number = random.randint(1,100)
+        return number
+    else :
+        return -1   #error
         
-    def round(self)
+def test_number(self, player_number, game_number):
+    '''μέθοδος της κλάσης game που ελέγχει αν ο παίκτης βρήκε τον αριθμό'''
+    if player_number == game_number:
+        return 0
+    elif player_number < game_number:
+        return -1
+    elif player_number > game_number:
+        return 1
+    else:
+        return 9999 #error
+    
+    
             
 
 def gameloop():
@@ -168,7 +167,7 @@ if __name__ == "__main__":
     def login():
         user =Player(request.form['Username'], request.form['Password'])
         result = user.login()
-        print(result)
+        
         
 
         if type(result) == int:
@@ -200,7 +199,7 @@ if __name__ == "__main__":
             return redirect("main_menu")
             
 
-        return render_template("index.html")
+        # return render_template("index.html")
     
     @app.route("/main_menu")
     def main_menu():
@@ -233,19 +232,73 @@ if __name__ == "__main__":
         
             
             
-            greeting = "Welocome "+session['username']+"!"
+            greeting = "Welocome "+session['username']+"!" 
             Player_highscore = 'Your highscore: ' + f"{session['userscore']}"
             return render_template("main_menu.html", greeting=greeting, pressed=session['difficulty'], Player_highscore=Player_highscore, best_highscore=best_score )
 
         
-
-    @app.route('/game')
-    def game():
-        round = Game(session['uesrname'], session['userscore'])
-        round.difficulty = session['difficulty']
-        
     
-        return "Game has started"
+    @app.route('/game',methods=['GET', 'POST'])
+    def game():
+        print("this is game function")
+        action = request.form.get('action')
+        print(action)
+        number = request.form.get('number')
+        print(number,type(number))
+
+        
+        
+
+        if session['difficulty'] == 'easy':                         #αναλογα τη δυσκολία δειχνω στο χρήστη το σύνολο
+            if 'min' not in session: session['min'] = 1             #στο οποιο ανοικει ο αριθμός
+            if 'max' not in session: session['max'] = 10
+        elif session['difficulty'] == 'medium':
+            if 'min' not in session: session['min'] = 1
+            if 'max' not in session: session['max'] = 50
+        elif session['difficulty'] == 'hard':
+            if 'min' not in session: session['min'] = 1
+            if 'max' not in session: session['max'] = 100      
+        
+        
+        if 'round_number' not in session:           #εδω δημιουργείται ο αριθμός που καλείται να βρει ο παικτης
+            
+            session['round_number']= generate_number(session['difficulty'])
+            print('current number is ',session['round_number'])
+        
+
+        if 'function_run_count' not in session:     #μετραω σε ποιο γυρο είναι το παιχνίδι
+            session['function_run_count'] = 0
+        elif session['function_run_count'] < 7 :
+            session['function_run_count'] += 1
+
+        if action == 'enter':
+            if number == '' or int(number) > int(session['max']) or int(number) < int(session['min']):          #O παίκτης δεν εδωσε σωστό αριθμό
+                session['function_run_count'] -= 1    #Δε μετράμε τον κενό γύρο
+                print('rejected round number was', number)
+
+            else:
+                try: 
+                    number = int(number)
+                    if int(session['round_number'])>number: session['min'] = number
+                    elif int(session['round_number'])<number: session['max'] = number
+                except: 
+                    if type(number)=='str':
+                        session['function_run_count'] -= 1
+                        print("number was", number, 'and its type is ',type(number))
+                
+        
+   
+
+        
+        
+        score=0
+        greeting = "Current Player: "+session['username']+"!"
+
+        return render_template("game.html", round=session['function_run_count'], greeting = greeting, min=session['min'], max=session['max'], score=score, Player_highscore=session['function_run_count'])
+    
+    
+    
+
 
         
 
