@@ -1,0 +1,25 @@
+<!doctype html>
+            <html lang="en">
+              <head>
+                <meta charset="utf-8">
+                <title>Game</title>
+                <meta name="generator" content="GrapesJS Studio">
+                <meta name="viewport" content="width=device-width,initial-scale=1">
+                <meta property="og:type" content="website">
+                <meta name="robots" content="index,follow">
+                <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+              </head>
+              <body id="backround">
+                <form method="post" action="{{ url_for('winner_screen') }}" id="ivqia">
+                  <button type="submit" name="action" value="play-again" id="play-again">Play Again</button>
+                  <button type="submit" name="action" value="logout" id="ibc0n-2">Logout</button>
+                  <b id="greeting-3">{{ greeting }}</b>
+                </form>
+                <b id="i8ubh-2" class="gjs-heading">{{personal_highscore}}</b>
+                <b id="if6rg-2" class="gjs-heading">{{best_highscore}}</b>
+                <b id="ikvg4">Congratulations!!!<br/></b>
+                <div id="ii3p4">{{message1}}<br/>{{message2}}</div>
+                <div id="izuf1">Your score was: {{score}}</div>
+              </body>
+            </html>
+          

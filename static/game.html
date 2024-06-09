@@ -1,0 +1,35 @@
+<!doctype html>
+            <html lang="en">
+              <head>
+                <meta charset="utf-8">
+                <title>Game</title>
+                <meta name="generator" content="GrapesJS Studio">
+                <meta name="viewport" content="width=device-width,initial-scale=1">
+                <meta property="og:type" content="website">
+                <meta name="robots" content="index,follow">
+                <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/style.css') }}">
+              </head>
+              <body id="backround">
+                <form method="post" action="{{ url_for('game') }}" id="ivqia">
+                  <button type="submit" name="action" value="enter" id="iolf-2">Enter</button>
+                  <button type="submit" name="action" value="logout" id="ibc0n-2">Logout</button>
+                  <input type="text" name='number'id="i77vg"/>
+                  <b id="greeting-3">{{ greeting }}</b>
+                </form>
+                <b id="i8ubh-2" class="gjs-heading">{{score}}</b>
+                <b id="if6rg-2" class="gjs-heading">{{Player_highscore}}</b>
+                <div id="ihcx4">&lt;</div>
+                <div id="ik14c">&lt;</div>
+                <div id="ixh8j" class="w3-container">{{min}}</div>
+                <div id="i443l" class="w3-container">{{max}}</div>
+                <b id="ikvg4">Guess the number:<br/></b>
+                <input type="radio" id="i2ddl" {% if round >= 1 %} checked {% endif %}/>
+                <input type="radio" id="idj6f" {% if round >= 2 %} checked {% endif %}/>
+                <input type="radio" id="izr5i" {% if round >= 3 %} checked {% endif %}/>
+                <input type="radio" id="i11yr" {% if round >= 4 %} checked {% endif %}/>
+                <input type="radio" id="ijcxq" {% if round >= 5 %} checked {% endif %}/>
+                <input type="radio" id="i97qe" {% if round >= 6 %} checked {% endif %}/>
+                <input type="radio" id="igm81" {% if round >= 7 %} checked {% endif %}/>
+              </body>
+            </html>
+          

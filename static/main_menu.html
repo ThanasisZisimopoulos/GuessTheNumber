@@ -1,0 +1,27 @@
+<!doctype html>
+            <html lang="en">
+              <head>
+                <meta charset="utf-8">
+                <title>Page 2</title>
+                <meta name="generator" content="GrapesJS Studio">
+                <meta name="viewport" content="width=device-width,initial-scale=1">
+                <meta property="og:type" content="website">
+                <meta name="robots" content="index,follow">
+                <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+              </head>
+              <body id="backround">
+                <b id="i8ubh" class="gjs-heading">{{Player_highscore}}</b>
+                <b class="gjs-heading" id="if6rg">{{best_highscore}}</b>
+                <b id="ikvg4">Please select difficulty</b>
+
+                <form action="{{ url_for('main_menu') }}" method="post">
+                  <button type="submit" name="action" value="hard" id="ikr5" class="{{ 'pressed' if (pressed=='hard') else '' }}">Hard</button>
+                  <button type="submit" name="action" value="medium" id="idf1g" class="{{ 'pressed' if (pressed=='medium') else '' }}">Medium</button>
+                  <button type="submit" name="action" value="easy" id="i2wo3" class="{{ 'pressed' if (pressed=='easy') else '' }}">Easy</button>
+                  <button type="submit" name="action" value="start" id="iolf">Start Game</button>
+                  <button type="submit" name="action" value="logout" id="ibc0n">Logout</button>
+
+                <b id="greeting">{{ greeting }}</b>
+              </body>
+            </html>
+          

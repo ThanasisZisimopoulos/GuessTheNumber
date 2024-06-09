@@ -334,7 +334,7 @@ if __name__ == "__main__":
         
         
     
-        return render_template("game.html", round=session['function_run_count'], greeting = greeting, min=session['min'], max=session['max'], score=session['function_run_count'])
+        return render_template("game.html", round=session['function_run_count'], greeting = greeting, min=session['min'], max=session['max'])
     
     
     
@@ -345,6 +345,7 @@ if __name__ == "__main__":
         hard_multiplyer = 500                               # β) Το ποσο πολύ κατάφερε να περιορίσει το  διάστημα στο οποίο είναι ο αριθμός
                                                             # γ) Σε περίπτωση που βρεί τον αριθμό υπάρχει bonus
         win_multiplyer = 2
+        attempt_multiplyer = (7 - session['function_run_count'])/7 +1
         
         action = request.form.get('action')
         if action == 'logout':
@@ -360,15 +361,15 @@ if __name__ == "__main__":
 
 
         if session['win'] == True:
-            if session['difficulty']=='easy':   score = win_multiplyer * easy_multiplyer
-            if session['difficulty']=='medium': score = win_multiplyer * medium_multiplyer
-            if session['difficulty']=='hard':   score = win_multiplyer * hard_multiplyer
+            if session['difficulty']=='easy':   score = win_multiplyer * easy_multiplyer * attempt_multiplyer
+            if session['difficulty']=='medium': score = win_multiplyer * medium_multiplyer * attempt_multiplyer
+            if session['difficulty']=='hard':   score = win_multiplyer * hard_multiplyer * attempt_multiplyer
             message1 = 'You have found the number!'
             print('round_numebr is', session['round_number'])
             print(type(session['round_number']))
             message2 = 'It was indeed '+str(session['round_number'])+'!'
         else:
-            if session['difficulty']=='easy':   score = (1-(  (int(session['max']) -  int(session['min'])) / 10 )  ) * easy_multiplyer
+            if session['difficulty']=='easy':   score = (1-(  (int(session['max']) -  int(session['min'])) / 10 )  ) * easy_multiplyer   #user used all the attempts, attempt multiplyer is 1 so its omitted
             if session['difficulty']=='medium': score = (1-(  (int(session['max']) -  int(session['min'])) / 50 )  ) * medium_multiplyer
             if session['difficulty']=='hard':   score = (1-(  (int(session['max']) -  int(session['min'])) / 100)  ) * hard_multiplyer
             message1 = 'You were so close!'
@@ -388,7 +389,7 @@ if __name__ == "__main__":
 
 
         f.close()
-                
+        score = round(score, 1)
         return render_template("winner_screen.html", score = score, message1=message1, message2=message2)
 
 
