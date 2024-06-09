@@ -20,7 +20,7 @@ class Player():                             #κλάση παίκτη για τη
 
     def create_new_profile(self):           
         '''μέθοδος της κλάσης Player οπου αποθηκεύει τα νεουδρυθέντα προφίλ στο αρχείο'''
-        f = open("app/data.json",'r+')          #το αρχείο με τα σκόρ είναι τύπου json 
+        f = open("data.json",'r+')          #το αρχείο με τα σκόρ είναι τύπου json 
         database = json.load(f)
 
         hashed_password = md5(self.password.encode()).hexdigest() #ο κωδικός αποθηκεύεται σε κατακερματισμένη (hashed) μορφή md5
@@ -34,7 +34,7 @@ class Player():                             #κλάση παίκτη για τη
     def login(self):
         '''Μέθοδος της κλάσης Player που διαχειρίζεται την επαλήθευση του κωδικού και το login'''
         
-        f = open("app/data.json",'r+')
+        f = open("data.json",'r+')
         database = json.load(f)
         
         
@@ -59,7 +59,7 @@ class Player():                             #κλάση παίκτη για τη
     
     def find_highscore(self):
         '''μέθοδος της κλάσης Player οπου επιστρέφει το μεγαλύτερο score που εχει επιτευγθεί'''
-        f = open("app/data.json",'r+')          #το αρχείο με τα σκόρ είναι τύπου json 
+        f = open("data.json",'r+')          #το αρχείο με τα σκόρ είναι τύπου json 
         database = json.load(f)
         highscore = 0
         for user in database:
@@ -82,7 +82,7 @@ class Player():                             #κλάση παίκτη για τη
 
     def lookup_player(self):     
         '''Μέθοδος της κλάσης Player που αναζητά αν υπάρχει το προφιλ στο αρχείο και επιστρέφει boolean'''
-        f = open("app/data.json",'r+')
+        f = open("data.json",'r+')
         database = json.load(f)
         profile_found = False
 
@@ -265,7 +265,7 @@ if __name__ == "__main__":
         number = request.form.get('number')
         print(number,type(number))
 
-        session['round_number'] = 10
+        
         
         
 
@@ -374,7 +374,7 @@ if __name__ == "__main__":
             message1 = 'You were so close!'
             message2 = 'It was '+str(session['round_number'])+'!'
 
-        f = open("app/data.json",'r+')          #το αρχείο με τα σκόρ είναι τύπου json
+        f = open("data.json",'r+')          #το αρχείο με τα σκόρ είναι τύπου json
 
         database = json.load(f)
         username = session['username']
