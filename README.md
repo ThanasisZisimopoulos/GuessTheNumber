@@ -10,11 +10,11 @@
 Για να τρέξετε το παιχνίδι στον υπολογιστή σας:
 1. Κατεβάστε το κώδικα του παιχνιδιού είτε μέσω του git (git clone https://github.com/ThanasisZisimopoulos/GuessTheNumber) είτε μέσω του πράσινου κουμπιού "<>Code" και "Download ZIP"
 2. Δημιουργείστε ένα virtual environment και εγκαταστήστε τη flask
-python3 -m venv venv
-source venv/bin/activate  # Σε Windows χρησιμοποιήστε `venv\Scripts\activate`
-pip install flask
+'python3 -m venv venv'
+'source venv/bin/activate'  # Σε Windows χρησιμοποιήστε `venv\Scripts\activate`
+'pip install flask'
 3. Τρέξτε το main.py αρχείο με python
-python app.py
+'python app.py'
 
 
 
