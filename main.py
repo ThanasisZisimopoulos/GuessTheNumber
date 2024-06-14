@@ -324,6 +324,7 @@ def winner_screen():
     attempt_multiplyer = (7 - session['function_run_count'])/7 +1
     
     action = request.form.get('action')
+    
     if action == 'logout':
         session.clear()
         return redirect('/')
@@ -349,6 +350,7 @@ def winner_screen():
         message1 = 'You were so close!'
         message2 = 'It was '+str(session['round_number'])+'!'
     f = open("data.json",'r+')          #το αρχείο με τα σκόρ είναι τύπου json
+    score = round(score, 1)
     database = json.load(f)
     username = session['username']
     old_score = database[username][1]
@@ -358,7 +360,7 @@ def winner_screen():
         f.seek(0)
         json.dump(database, f, indent = 4)       
     f.close()
-    score = round(score, 1)
+    
     return render_template("winner_screen.html", score = score, message1=message1, message2=message2)
 
 if __name__ == "__main__":
