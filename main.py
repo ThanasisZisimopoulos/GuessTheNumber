@@ -44,7 +44,7 @@ class Player():                             #κλάση παίκτη για τη
         if self.username == "":  #η περιπτωση οπου ο χρήστης πατησε το login χωρις να βαλει ονομα
             return 0
         
-        if len(self.password)<8:
+        if len(self.password)<8: #η περιπτωση οπου ο χρήστης έβαλε υπερβολικά μικρό κωδικό
             print("too small password")
             return -1
 
@@ -62,13 +62,10 @@ class Player():                             #κλάση παίκτη για τη
         f = open("data.json",'r+')          #το αρχείο με τα σκόρ είναι τύπου json 
         database = json.load(f)
         highscore = 0
-        for user in database:
+        for user in database:               #γίνεται αναζήτηση σε όλο το αρχείο σε όλους του αποθηκευμένους παίκτες για το μεγαλύτερο σκόρ
             if database[user][1] > highscore:
                 highscore = database[user][1]
 
-
-
-        
         session['best_score'] = highscore
         
         
@@ -86,13 +83,13 @@ class Player():                             #κλάση παίκτη για τη
         database = json.load(f)
         profile_found = False
 
-        if self.username == '':
+        if self.username == '':                 #Η περίπτωση που το username είναι κενό
             print("User didnt enter username")
             profile_found = False
 
         else:
             for profile in database:
-                if self.username == profile:
+                if self.username == profile:    #αν βρεθεί ο παίκτης επιστρέφει True
                     profile_found = True
                     break
        
@@ -101,13 +98,9 @@ class Player():                             #κλάση παίκτη για τη
 
 
 
-#class Game():
-# def __init__(self, player, highscore):
-#     self.player = player
-#     self.current_highscore = highscore
-#     self.difficulty = 0
 
-def generate_number(difficulty):            #TODO: tune the difficulty parameters 
+
+def generate_number(difficulty):            
     "μέθοδος της κλάσης game που επιστρέφει τυχαίο αριθμό ανάλογα με τη δυσκολία"
     if difficulty == 'easy':
         number = random.randint(1,10)
@@ -121,7 +114,7 @@ def generate_number(difficulty):            #TODO: tune the difficulty parameter
     else :
         return -1   #error
         
-def test_number(self, player_number, game_number):
+def test_number(player_number, game_number):
     '''μέθοδος της κλάσης game που ελέγχει αν ο παίκτης βρήκε τον αριθμό'''
     if player_number == game_number:
         return 0
@@ -135,39 +128,26 @@ def test_number(self, player_number, game_number):
     
             
 
-def gameloop():
-    username = input("Give username:")
-    password = input("GIve password:")
-    
-    player1 = Player(username, password)
-    player1.create_new_profile()
-    player1.lookup_player()
-    player1.login()
-    
-    print(player1.password)
-    pass
-
-
 
 app = Flask(__name__, template_folder='html')
-key = secrets.token_hex()
-key = md5(key.encode()).hexdigest()
+key = secrets.token_hex() 
+key = md5(key.encode()).hexdigest() #για επιπλέων ασφάλεια, το αποτέλεσμα κατακερματίζεται με το md5 
 app.secret_key = key
 
 @app.route("/")
-def initialize():
+def initialize():                   #η αρχική οθόνη
     app.static_folder = 'static'
-    session.clear()
+    session.clear()#γίνεται reset του παιχνιδιού
 
     return render_template("index.html")
 
 @app.route("/login", methods=['POST'])
-def login():
-    user =Player(request.form['Username'], request.form['Password'])
+def login():                        #η login οθόνη
+    user =Player(request.form['Username'], request.form['Password']) 
     result = user.login()
     
     
-    if type(result) == int:
+    if type(result) == int: #τα int χρησιμοποιούνται ως κωδικοί σφάλματος
         
         if result == 0:
             print("user didnt enter username")
@@ -187,7 +167,7 @@ def login():
             info_text = "Account sucessfully created, login again to play"
             return render_template("index.html", info_text=info_text)
             
-    else:# type(result) != int:
+    else:# type(result) != int:           αν δε προκύψει σφάλμα το result ειναι αντικείμενο
         
         
         session['username'] = result.username
@@ -198,45 +178,39 @@ def login():
     # return render_template("index.html")
 
 @app.route("/main_menu",methods=['GET', 'POST'])
-def main_menu():
-    if 'game_started' not in session:
-        print('game_started not in session')
-        user =Player(session['username'], None) #δημιουργω ενα αντικέιμενο player για να τρέξω την find_highdcore 
-        best_score = user.find_highscore()
-        best_score = 'Best score ever: '+ f"{best_score}"
-        pressed = 'medium'
-        session['difficulty'] = pressed
-        greeting = "Welocome "+session['username']+"!"
-        Player_highscore = 'Your highscore: ' + f"{session['userscore']}"
+def main_menu():                                #το μενού για την επιλογή δυσκολίας
+    if 'game_started' not in session:#περίπτωση που δεν εχει αρχίσει το παιχνίδι, δημιουργείται ενα νεο
+
+        session['difficulty'] = 'medium'#προεπιλογή
         session['game_started'] = 'yes'
-        print(session['game_started'])
-    else:
-    
+        
+    else:#περίπτωση που εχει ήδη αρχίσει ενα παιχνίδι και ο χρήστης πατησε τo play again
 
         action = request.form.get('action')
-        print(action)
-        greeting = "Welocome "+session['username']+"!" 
-        pressed = session['difficulty']
+        
         Player_highscore = ''
         best_score = ''
+
+        #διαχείρηση των κουμπιών
         if action == 'logout': #ο χρήστης πατησε logout
-            print("attempting to log out.. username is", session['username'])
-            session.clear()
             
-            print('logout')
+            session.clear() #γίνεται reset του παιχνιδιού
             return redirect("/")
+        
         elif action == 'start': #ο χρήστης πατησε start
-            print('start')
-            return redirect("/game")
-        elif action == 'easy' or 'medium' or 'hard':                  #ο χρήστης άλλαξε τη δυσκολία
-            print('difficulty changed')
-            session['difficulty'] = action
-            user =Player(session['username'], None) #δημιουργω ενα αντικέιμενο player για να τρέξω την find_highdcore 
-            best_score = user.find_highscore()
-            best_score = 'Best score ever: '+ f"{best_score}"
-            pressed = session['difficulty']
             
-            Player_highscore = 'Your highscore: ' + f"{session['userscore']}"
+            return redirect("/game")
+        
+        elif action == 'easy' or 'medium' or 'hard':                  #ο χρήστης άλλαξε τη δυσκολία
+            session['difficulty'] = action
+            
+            
+    user =Player(session['username'], None) #δημιουργω ενα αντικέιμενο player για να τρέξω την find_highdcore 
+    best_score = user.find_highscore()
+    best_score = 'Best score ever: '+ f"{best_score}"        
+    pressed = session['difficulty']
+    greeting = "Welocome "+session['username']+"!"
+    Player_highscore = 'Your highscore: ' + f"{session['userscore']}"
         
     return render_template("main_menu.html", greeting=greeting, pressed=pressed, Player_highscore=Player_highscore, best_highscore=best_score )
 
@@ -245,16 +219,12 @@ def main_menu():
 
 @app.route('/game',methods=['GET', 'POST'])
 def game():
-    print("this is game function")
+    
     action = request.form.get('action')
-    print(action)
     number = request.form.get('number')
-    print(number,type(number))
     
-    
-    
-    if session['difficulty'] == 'easy':                         #αναλογα τη δυσκολία δειχνω στο χρήστη το σύνολο
-        if 'min' not in session: session['min'] = 1             #στο οποιο ανοικει ο αριθμός
+    if session['difficulty'] == 'easy':                             #αναλογα τη δυσκολία δειχνω στο χρήστη το σύνολο
+        if 'min' not in session: session['min'] = 1                 #στο οποιο ανοικει ο αριθμός
         if 'max' not in session: session['max'] = 10
     elif session['difficulty'] == 'medium':
         if 'min' not in session: session['min'] = 1
@@ -264,7 +234,7 @@ def game():
         if 'max' not in session: session['max'] = 100      
     
     
-    if 'round_number' not in session:           #εδω δημιουργείται ο αριθμός που καλείται να βρει ο παικτης
+    if 'round_number' not in session:                               #εδω δημιουργείται ο αριθμός που καλείται να βρει ο παικτης
         
         session['round_number']= generate_number(session['difficulty'])
         print('current number is ',session['round_number'])
@@ -273,42 +243,39 @@ def game():
         session['function_run_count'] = 0
     elif session['function_run_count'] < 7 :
         session['function_run_count'] += 1
+
     if action == 'enter':
         if number == '' or int(number) > int(session['max']) or int(number) < int(session['min']):          #O παίκτης δεν εδωσε σωστό αριθμό
             session['function_run_count'] -= 1    #Δε μετράμε τον κενό γύρο
             print('rejected round number was', number)
         else:
-            try: 
-                number = int(number)
+            try:                                            #αν αυτο που έχει γράψει ο χρήστης δεν είναι αριθμός
+                number = int(number)                        #το πρόγραμμα θα πάει στο except 
                 if int(session['round_number'])>number: 
                     session['min'] = number
-                    if session['function_run_count'] == 7: 
+                    if session['function_run_count'] == 7:  #τέλος προσπάθειων αρα τέλος παιχνιδιού
                         session['win'] = False
                         return redirect("/winner_screen")
                 elif int(session['round_number'])<number: 
                     session['max'] = number
-                    if session['function_run_count'] == 7: 
+                    if session['function_run_count'] == 7:   #τέλος προσπάθειων αρα τέλος παιχνιδιού
                         session['win'] = False
                         return redirect("/winner_screen")
                     
-                elif int(session['round_number'])==number:
+                elif int(session['round_number'])==number: #ο παίκτης βρήκε τον αριθμό
                     session['win']=True
                     print('session[win] is ',session['win'])
                     return redirect("/winner_screen")
             except: 
                 if type(number)=='str':
                     session['function_run_count'] -= 1
-                    print("number was", number, 'and its type is ',type(number))
+                    
     elif action == 'logout':
         session.clear()
         return redirect('/')
             
-    
-    
-    
+
     greeting = "Current Player: "+session['username']+"!"
-    
-    
 
     return render_template("game.html", round=session['function_run_count'], greeting = greeting, min=session['min'], max=session['max'])
 
@@ -325,23 +292,23 @@ def winner_screen():
     
     action = request.form.get('action')
     
-    if action == 'logout':
-        session.clear()
+    if action == 'logout': #ο χρήστης πάτησε logout
+        session.clear()    #γινεται reset του παιχνιδιου
         return redirect('/')
-    elif action == 'play-again':
+    elif action == 'play-again': # ο χρήστης πάτησε play again
         print('play again pressed')
-        temp = (session['username'], session['userscore'])
-        session.clear()
-        session['username'] = temp[0]
+        temp = (session['username'], session['userscore'])  #κρατάω τα στοιχεία του παικτη
+        session.clear()                                     #γίνεται reset το παιχνίδι
+        session['username'] = temp[0]                       #επιστρέφονται τα στοιχεία στο session
         session['userscore'] = temp[1]
         return redirect('main_menu')
-    if session['win'] == True:
-        if session['difficulty']=='easy':   score = win_multiplyer * easy_multiplyer * attempt_multiplyer
+    
+
+    if session['win'] == True:                              #ο παίκτης βρήκε τον αριθμό
+        if session['difficulty']=='easy':   score = win_multiplyer * easy_multiplyer * attempt_multiplyer           #υπολογίζεται το σκόρ
         if session['difficulty']=='medium': score = win_multiplyer * medium_multiplyer * attempt_multiplyer
         if session['difficulty']=='hard':   score = win_multiplyer * hard_multiplyer * attempt_multiplyer
         message1 = 'You have found the number!'
-        print('round_numebr is', session['round_number'])
-        print(type(session['round_number']))
         message2 = 'It was indeed '+str(session['round_number'])+'!'
     else:
         if session['difficulty']=='easy':   score = (1-(  (int(session['max']) -  int(session['min'])) / 10 )  ) * easy_multiplyer   #user used all the attempts, attempt multiplyer is 1 so its omitted
@@ -349,13 +316,14 @@ def winner_screen():
         if session['difficulty']=='hard':   score = (1-(  (int(session['max']) -  int(session['min'])) / 100)  ) * hard_multiplyer
         message1 = 'You were so close!'
         message2 = 'It was '+str(session['round_number'])+'!'
+
     f = open("data.json",'r+')          #το αρχείο με τα σκόρ είναι τύπου json
-    score = round(score, 1)
+    score = round(score, 1)             #στροφφυλοποίηση του score στο 1ο δεκαδικο
     database = json.load(f)
     username = session['username']
     old_score = database[username][1]
-    if score > old_score:
-        database[username][1] = score
+    if score > old_score:               #αν το σκορ του παιχνιδιού είναι μεγαλύτερο από
+        database[username][1] = score   #το highscore του παικτη, ανανεώνουμε το αρχείο
         session['userscore'] = score
         f.seek(0)
         json.dump(database, f, indent = 4)       
@@ -364,4 +332,4 @@ def winner_screen():
     return render_template("winner_screen.html", score = score, message1=message1, message2=message2)
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    app.run()
